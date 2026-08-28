@@ -21,21 +21,21 @@ class UserSeeder extends Seeder
 
         $accounts = [
             [
-                'email'        => 'admin@quantpesa.test',
+                'email'        => 'admin@quantpesa.com',
                 'status'       => 'admin',
                 'display_name' => 'QuantPesa Admin',
                 'role'         => 'admin',
                 'plan'         => 'Elite',
             ],
             [
-                'email'        => 'trader@quantpesa.test',
+                'email'        => 'trader@quantpesa.com',
                 'status'       => 'active',
                 'display_name' => 'Demo Trader',
                 'role'         => 'trader',
                 'plan'         => 'Pro',
             ],
             [
-                'email'        => 'demo@quantpesa.test',
+                'email'        => 'demo@quantpesa.com',
                 'status'       => 'active',
                 'display_name' => 'Free Demo',
                 'role'         => 'trader',
