@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ─── OBSIDIAN COMMAND (Default) ─────────────────── */
+:root {
+    --bg-main:        #0B0F14;
+    --bg-secondary:   #131A22;
+    --bg-panel:       #1A232D;
+    --text-primary:   #F5F7FA;
+    --text-secondary: #B8C2CC;
+    --text-muted:     #7D8894;
+    --accent:         #D9A441;
+    --accent-dim:     #A97816;
+    --profit:         #3FA26A;
+    --loss:           #C65A46;
+    --warning:        #D9A441;
+    --border:         #2A3642;
+}
+
+[data-theme="titanium-blue"] {
+    --bg-main:        #0D1117;
+    --bg-secondary:   #161B22;
+    --bg-panel:       #1F2933;
+    --text-primary:   #FFFFFF;
+    --text-secondary: #D1D9E0;
+    --text-muted:     #8B949E;
+    --accent:         #4FC3F7;
+    --accent-dim:     #0288D1;
+    --profit:         #43A047;
+    --loss:           #E57373;
+    --warning:        #FFB74D;
+    --border:         #30363D;
+}
+
+[data-theme="carbon-redline"] {
+    --bg-main:        #0A0D12;
+    --bg-secondary:   #161A20;
+    --bg-panel:       #20262D;
+    --text-primary:   #FAFAFA;
+    --text-secondary: #CBD2D9;
+    --text-muted:     #8A939C;
+    --accent:         #FF7043;
+    --accent-dim:     #D84315;
+    --profit:         #4CAF50;
+    --loss:           #E53935;
+    --warning:        #FFB74D;
+    --border:         #2F3943;
+}
+
+[data-theme="admin"] {
+    --bg-main:        #080E0A;
+    --bg-secondary:   #0F1A12;
+    --bg-panel:       #162119;
+    --text-primary:   #F0F7F1;
+    --text-secondary: #A8C4AB;
+    --text-muted:     #6B8F6E;
+    --accent:         #D9A441;
+    --accent-dim:     #A97816;
+    --profit:         #3FA26A;
+    --loss:           #C65A46;
+    --warning:        #D9A441;
+    --border:         #1E3524;
+}
+
+/* ─── BASE ───────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+}
+
+.panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.panel-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--profit);
+    display: inline-block;
+    animation: pulse 1.5s infinite;
+    margin-right: 6px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.8); }
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-accent  { background: var(--accent); color: #000; }
+.btn-profit  { background: var(--profit); color: #fff; }
+.btn-loss    { background: var(--loss);   color: #fff; }
+.btn-ghost   { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.text-accent    { color: var(--accent); }
+.text-profit    { color: var(--profit); }
+.text-loss      { color: var(--loss); }
+.text-muted-qp  { color: var(--text-muted); }
+
+/* ─── GLOWING EDGES ──────────────────────────────── */
+.edge-left {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    opacity: 0.6; z-index: 100;
+}
+.edge-right {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--profit), transparent);
+    opacity: 0.6; z-index: 100;
+}
+.edge-bottom {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent, var(--accent), var(--profit), transparent);
+    opacity: 0.4; z-index: 100;
+}
+
+/* ─── TOAST ──────────────────────────────────────── */
+#toast-container {
+    position: fixed; top: 20px; right: 20px;
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+}
+
+.toast {
+    padding: 12px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    border-left: 3px solid;
+    background: var(--bg-panel);
+    animation: slideIn 0.3s ease;
+    min-width: 240px;
+}
+
+.toast-profit { border-color: var(--profit); color: var(--profit); }
+.toast-loss   { border-color: var(--loss);   color: var(--loss); }
+.toast-info   { border-color: var(--accent);  color: var(--accent); }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
