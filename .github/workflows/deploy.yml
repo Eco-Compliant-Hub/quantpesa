@@ -1,0 +1,72 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+
+          script: |
+            set -e
+
+            APP_DIR="/home/quantpes/public_html"
+            PHP_BIN="/opt/alt/php82/usr/bin/php"
+
+            cd "$APP_DIR"
+
+            cleanup() {
+              echo "==> Ensuring site is up..."
+              $PHP_BIN artisan up || true
+            }
+
+            trap cleanup EXIT
+
+            echo "==> Enabling maintenance mode..."
+            $PHP_BIN artisan down --retry=60 || true
+
+            echo "==> Pulling latest changes..."
+            git config --global --add safe.directory "$APP_DIR"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "==> Installing Composer dependencies..."
+
+            $PHP_BIN /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
+
+            echo "==> Running migrations..."
+            $PHP_BIN artisan migrate --force
+
+            echo "==> Creating storage link..."
+            $PHP_BIN artisan storage:link --force || true
+
+            echo "==> Rebuilding caches..."
+            $PHP_BIN artisan config:clear
+            $PHP_BIN artisan config:cache
+            $PHP_BIN artisan route:clear
+            $PHP_BIN artisan route:cache || true
+            $PHP_BIN artisan view:clear
+            $PHP_BIN artisan view:cache
+
+            echo "==> Restarting queues..."
+            $PHP_BIN artisan queue:restart || true
+
+            echo "==> Deployment completed!"
