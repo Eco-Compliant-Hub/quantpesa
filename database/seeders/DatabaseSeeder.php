@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             SymbolSeeder::class,
             ContractTypeSeeder::class,
             PlanSeeder::class,
+            UserSeeder::class,
             WindowDefinitionSeeder::class,
             BotTemplateSeeder::class,
             AiModelSeeder::class,
